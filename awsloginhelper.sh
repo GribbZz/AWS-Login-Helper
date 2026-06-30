@@ -15,11 +15,11 @@ cleanup_profiles() {
   TMP_FILE=$(mktemp)
 
   if [[ ! -f "$CRED_FILE" ]]; then
-    echo "⚠️ Credentials file does not exist: $CRED_FILE"
+    echo "Credentials file does not exist: $CRED_FILE"
     return
   fi
 
-  echo "⚠️ Cleaning non-default profiles from $CRED_FILE..."
+  echo "Cleaning non-default profiles from $CRED_FILE..."
 
   awk '
     BEGIN { keep = 1 }
@@ -38,7 +38,7 @@ cleanup_profiles() {
 
   mv "$TMP_FILE" "$CRED_FILE"
 
-  echo "✅ Cleanup complete: All profiles except 'default' removed."
+  echo "Cleanup complete: All profiles except 'default' removed."
 }
 
 # Option 1: Standard AWS login without MFA
@@ -53,7 +53,7 @@ standard_aws_login() {
   read -p "Enter output format (leave blank to skip, e.g., json): " OUTPUT_FORMAT
 
   if [[ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY" ]]; then
-    echo "❌ AWS Access Key ID and AWS Secret Access Key are required."
+    echo "AWS Access Key ID and AWS Secret Access Key are required."
     exit 1
   fi
 
@@ -68,7 +68,7 @@ standard_aws_login() {
     aws configure set output "$OUTPUT_FORMAT" --profile "$TARGET_PROFILE"
   fi
 
-  echo -e "\n✅ Standard AWS credentials saved under profile: [$TARGET_PROFILE]"
+  echo -e "\nStandard AWS credentials saved under profile: [$TARGET_PROFILE]"
   echo "   To use it: aws sts get-caller-identity --profile $TARGET_PROFILE"
 }
 
@@ -87,7 +87,7 @@ standard_login_with_mfa() {
   read -p "Enter MFA token code: " TOKEN_CODE
 
   if [[ -z "$MFA_ARN" || -z "$TOKEN_CODE" || -z "$TARGET_PROFILE" ]]; then
-    echo "❌ MFA ARN, MFA token code, and target profile are required."
+    echo "MFA ARN, MFA token code, and target profile are required."
     exit 1
   fi
 
@@ -106,7 +106,7 @@ standard_login_with_mfa() {
   aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile "$TARGET_PROFILE"
   aws configure set aws_session_token "$AWS_SESSION_TOKEN" --profile "$TARGET_PROFILE"
 
-  echo -e "\n✅ Standard AWS MFA session credentials saved under profile: [$TARGET_PROFILE]"
+  echo -e "\nStandard AWS MFA session credentials saved under profile: [$TARGET_PROFILE]"
   echo "   Expiration: $EXPIRATION"
   echo "   To use it: aws sts get-caller-identity --profile $TARGET_PROFILE"
 }
@@ -126,7 +126,7 @@ assume_role_login() {
   read -p "Enter name for the profile to store credentials (e.g., assumed-role): " TARGET_PROFILE
 
   if [[ -z "$ROLE_ARN" || -z "$TARGET_PROFILE" ]]; then
-    echo "❌ ROLE ARN and target profile are required."
+    echo "ROLE ARN and target profile are required."
     exit 1
   fi
 
@@ -145,7 +145,7 @@ assume_role_login() {
   aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile "$TARGET_PROFILE"
   aws configure set aws_session_token "$AWS_SESSION_TOKEN" --profile "$TARGET_PROFILE"
 
-  echo -e "\n✅ Assume role credentials saved under profile: [$TARGET_PROFILE]"
+  echo -e "\nAssume role credentials saved under profile: [$TARGET_PROFILE]"
   echo "   Expiration: $EXPIRATION"
   echo "   To use it: aws sts get-caller-identity --profile $TARGET_PROFILE"
 }
@@ -169,7 +169,7 @@ assume_role_with_mfa() {
   read -p "Enter MFA token code: " TOKEN_CODE
 
   if [[ -z "$ROLE_ARN" || -z "$MFA_ARN" || -z "$TOKEN_CODE" || -z "$TARGET_PROFILE" ]]; then
-    echo "❌ ROLE ARN, MFA ARN, MFA token code, and target profile are required."
+    echo "ROLE ARN, MFA ARN, MFA token code, and target profile are required."
     exit 1
   fi
 
@@ -190,7 +190,7 @@ assume_role_with_mfa() {
   aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile "$TARGET_PROFILE"
   aws configure set aws_session_token "$AWS_SESSION_TOKEN" --profile "$TARGET_PROFILE"
 
-  echo -e "\n✅ Assume role with MFA credentials saved under profile: [$TARGET_PROFILE]"
+  echo -e "\nAssume role with MFA credentials saved under profile: [$TARGET_PROFILE]"
   echo "   Expiration: $EXPIRATION"
   echo "   To use it: aws sts get-caller-identity --profile $TARGET_PROFILE"
 }
@@ -227,7 +227,7 @@ case "$OPTION" in
     assume_role_with_mfa
     ;;
   *)
-    echo "❌ Invalid option selected."
+    echo "Invalid option selected."
     exit 1
     ;;
 esac
